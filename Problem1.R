@@ -1,5 +1,6 @@
 library(MASS)
 library(spatial)
+library(spatstat)
 
 set.seed(123)
 
@@ -7,7 +8,7 @@ cells <- read.table("cells.dat")
 pines <- read.table("pines.dat")
 redwood <- read.table("redwood.dat")
 
-pines <- ppinit("pines.dat")
+#pines <- ppinit("pines.dat")
 
 names(cells) <- c("x", "y")
 names(pines) <- c("x", "y")
@@ -23,76 +24,66 @@ for(i in 1:length(data)) {
 
 
 # Problem 1b
-maxdist <- sqrt(2)
-num.points <- 100
 
-j.est.one.point <- function(t, data) {
-  res <- 0
-  for(i in 1:nrow(data)) {
-    tmp <- 0
-    for(j in 1:nrow(data)) {
-      if(norm(data[i,] - data[j,], type = "2") <= t) {
-        tmp <- tmp + 1
-      }
-    }
-    res <- res + tmp - 1
-  }
-  res <- res / nrow(data)
-  res <- res / (pi * t^2)
-  return(res)
-}
+ppregion(xl = 0, xu = 1, yl = 0, yu = 1)
+window = owin(xrange = c(0, 1), yrange = c(0, 1))
 
-j.est <- function(data, num.points, xmin, xmax, ymin, ymax) {
-  maxr <- norm(c(xmin, ymin) - c(xmax, ymax), type = "2")
-  maxr <- 0.1
-  res <- list(x = vector(mode = "numeric", length = num.points), 
-              y = vector(mode = "numeric", length = num.points))
-  for(i in 1:num.points) {
-    res$x[i] <- i*maxr/num.points
-    res$y[i] <- j.est.one.point(i*maxr/num.points, data)
-  }
-  return(res)
-}
+cells = as.ppp(cells, window)
+pines = as.ppp(pines, window)
+redwood = as.ppp(redwood, window)
 
-J <- j.est(pines, num.points = 20, xmin = 0, xmax = 1, ymin = 0, ymax = 1)
-plot(x = J$x, y = J$y, ylim = c(0, max(J$y)))
-
-for(i in 1:length(data)){
-  J <- j.est(data[[i]], num.points = 40, xmin = 0, xmax = 1, ymin = 0, ymax = 1)
-  plot(x = J$x, y = J$y, ylim = c(0, max(J$y)), main = names[i])
-}
-  
-sim.unif <- function() {
-  n <- rpois(1, lambda = 100)
-  x <- runif(n, min = 0, max = 10)
-  y <- runif(n, min = 0, max = 10)
+sim.unif <- function(n) {
+  x <- runif(n, min = 0, max = 1)
+  y <- runif(n, min = 0, max = 1)
   
   return(cbind(x, y))
 }
 
-tmp <- sim.unif()
-tmp <- rpoispp(lambda = 100, win = square(1))
-plot(x = tmp$x, y = tmp$y, xlim = c(0, 1), ylim = c(0, 1))
-J <- j.est(tmp, num.points = 20, xmin = 0, xmax = 10, ymin = 0, ymax = 10)
-plot(x = J$x, y = J$y, ylim = c(0, max(J$y)))
+sim = as.ppp(sim.unif(), window)
+plot(Kfn(sim, fs = 1.4, k = 100))
 
-tmp <- as.data.frame(tmp)
-names(tmp) = c("x", "y")
 
-plot(Kfn(tmp, fs = 1.4, k = 100))
+plot(Kfn(cells, fs = 1.4, k = 100), type = "l")
+plot(Kfn(pines, fs = 1.4, k = 100), type = "l")
+plot(Kfn(redwood, fs = 1.4, k = 100), type = "l")
 
-tmp2 <- as.ppp(tmp, c(0, 10, 0, 10))
 
-jest <- Jest(tmp2, r = seq(from = 0, to = 1.14, by = 0.001))
+plot(Kfn(cells, fs = 1.4, k = 1000), type = "l")
+abline(a = 0, b = 1, col = "red")
+plot(Kfn(pines, fs = 1.4, k = 1000), type = "l")
+abline(a = 0, b = 1, col = "red")
+plot(Kfn(redwood, fs = 1.4, k = 1000), type = "l")
+abline(a = 0, b = 1, col = "red")
 
-plot(Jest(tmp2, r = seq(from = 0, to = 1.14, by = 0.001)))
+# c)
 
-plot(Jest(as.ppp(pines, c(0, 1, 0, 1))))
-jest <- Jest(as.ppp(pines, c(0, 1, 0, 1)))
+compute_quantiles = function(s, n){
+  window = owin(xrange = c(0, 1), yrange = c(0, 1))
+  sim = as.ppp(sim.unif(n), window)
+  L_0 = Kfn(sim, fs = 1.4, k = 100)
+  L = matrix(ncol = s, nrow = length(L_0$x))
+  L[,1] = L_0$y
+  for (i in 2:s){
+    sim = as.ppp(sim.unif(n), window)
+    L[,i] = Kfn(sim, fs = 1.4, k = 100)$y
+  }
+  upper_q = c()
+  lower_q = c()
+  for (i in 1:length(L_0$x)){
+    upper_q = c(upper_q, quantile(L[i,], probs = 0.95))
+    lower_q = c(lower_q, quantile(L[i,], probs = 0.05))
+  }
+  Q_mat = data.frame(x = L_0$x, upper = upper_q, lower = lower_q)
+  Q_mat
+}
 
-#for(i in 1:length(data)) {
-#  plot(Kfn(data[[i]], fs = maxdist, k = num.points), type = "l", xlab = "t", ylab = expression(L[2](t)), 
-#       main = paste0("L(t) for ", names[i], " dataset"), ylim = c(0, 7))
-#}
-
+MC_test = function(s, dataset){  # input dataset as ppp
+  quantiles = compute_quantiles(s, length(dataset$x))
+  plot(Kfn(dataset, fs = 1.4, k = 100), type = "l")
+  lines(x = quantiles$x, y = quantiles$upper, col = "red")
+  lines(x = quantiles$x, y = quantiles$lower, col = "red")
+}
+MC_test(100, cells)
+MC_test(100, pines)
+MC_test(100, redwood)
 
