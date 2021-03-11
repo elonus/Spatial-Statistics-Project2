@@ -1,4 +1,7 @@
 library(MASS)
+library(spatstat)
+library(spatial)
+
 
 # We gestimate lambda_M to be 5
 
@@ -65,5 +68,7 @@ plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6)) # maybe not clustered
 
 MC_test(100, redwood, lambda_M = 10, sigma = 0.07, lambda_k = 6)
 plot(Neuman_sim(lambda_M = 10, sigma = 0.07, lambda_k = 6))
+
+
 
 
