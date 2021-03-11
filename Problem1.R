@@ -94,3 +94,5 @@ jest <- Jest(as.ppp(pines, c(0, 1, 0, 1)))
 #  plot(Kfn(data[[i]], fs = maxdist, k = num.points), type = "l", xlab = "t", ylab = expression(L[2](t)), 
 #       main = paste0("L(t) for ", names[i], " dataset"), ylim = c(0, 7))
 #}
+
+
