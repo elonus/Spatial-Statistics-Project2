@@ -11,7 +11,7 @@ obs.matrix = matrix(obs$N_obs, byrow = FALSE, nrow = sqrt(nrow(obs)))
 
 image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10), z = obs.matrix, 
            main = "The number of pine trees observed in each grid unit",
-           xlab = "X", ylab = "Y", legend)
+           xlab = "X", ylab = "Y")
 
 prob.matrix = matrix(prob$alpha, byrow = FALSE, nrow = sqrt(nrow(prob)))
 
@@ -49,32 +49,32 @@ for (j in 1:6){
   event.locs[[j]] = event.loc
 }
   
-op = par(mfrow = c(3, 2))
+op = par(mfrow = c(2, 3), oma = c(1, 0, 2, 0))
 
 plot(x = event.locs[[1]][, 1], y = event.locs[[1]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "aquamarine3", xlab = "X", ylab = "Y", 
-     main = "Realization 1")  
+     main = "Realization 1", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = event.locs[[2]][, 1], y = event.locs[[2]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "aquamarine3", xlab = "X", ylab = "Y", 
-     main = "Realization 2")  
+     main = "Realization 2", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = event.locs[[3]][, 1], y = event.locs[[3]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "aquamarine3", xlab = "X", ylab = "Y", 
-     main = "Realization 3")  
+     main = "Realization 3" , xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = event.locs[[4]][, 1], y = event.locs[[4]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "aquamarine3", xlab = "X", ylab = "Y", 
-     main = "Realization 4")  
+     main = "Realization 4", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = event.locs[[5]][, 1], y = event.locs[[5]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "aquamarine3", xlab = "X", ylab = "Y", 
-     main = "Realization 5")  
+     main = "Realization 5", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = event.locs[[6]][, 1], y = event.locs[[6]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "aquamarine3", xlab = "X", ylab = "Y", 
-     main = "Realization 6")  
-
+     main = "Realization 6", xlim = c(0,300), ylim = c(0,300))  
+mtext("Prior Poisson eventlocation realizations", outer = TRUE, cex = 2)
 par(op)
 
 #d)
@@ -99,36 +99,36 @@ for (j in (1:6)){
   post.event.locs[[j]] = event.loc
 }
 
-par(mfrow = c(3,2))
+par(mfrow = c(2,3), oma = c(1, 0, 2, 0))
 
 plot(x = post.event.locs[[1]][, 1], y = post.event.locs[[1]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
-     main = "Realization 1") 
+     main = "Realization 1", xlim = c(0,300), ylim = c(0,300)) 
 
 plot(x = post.event.locs[[2]][, 1], y = post.event.locs[[2]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
-     main = "Realization 2")  
+     main = "Realization 2", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = post.event.locs[[3]][, 1], y = post.event.locs[[3]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
-     main = "Realization 3")  
+     main = "Realization 3", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = post.event.locs[[4]][, 1], y = post.event.locs[[4]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
-     main = "Realization 4")  
+     main = "Realization 4", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = post.event.locs[[5]][, 1], y = post.event.locs[[5]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
-     main = "Realization 5")  
+     main = "Realization 5", xlim = c(0,300), ylim = c(0,300))  
 
 plot(x = post.event.locs[[6]][, 1], y = post.event.locs[[6]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
-     main = "Realization 6") 
-
+     main = "Realization 6", xlim = c(0,300), ylim = c(0,300)) 
+mtext("Posterior Poisson eventlocation realizations", outer = TRUE, cex = 2)
 par(op)
 
 #e)
-par(mfrow = c(1,1))
+
 
 prior = matrix(rpois(900*100, est.lambda*100), ncol = 100, nrow = 900)
 prior = apply(prior, 1, mean)
@@ -140,12 +140,19 @@ for (i in 1:900){
 }
 
 prior.matrix = matrix(prior, byrow = FALSE, nrow = sqrt(length(prior)))
-
-image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10), z = prior.matrix)
-
 post.matrix = matrix(posterior, byrow = FALSE, nrow = sqrt(length(posterior)))
 
-image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10), z = post.matrix)
 
+
+image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10),
+           z = prior.matrix, xlab = "X", ylab = "Y",
+           main = "Prior", xlim = c(0,300),
+           ylim = c(0,300))
+image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10),
+           z = post.matrix, xlab = "X", ylab = "Y",
+           main = "Posterior", xlim = c(0,300),
+           ylim = c(0,300))
+#mtext("Average of 100 realizations of thediscretized event-count model",
+     # outer = TRUE, cex = 2)
 
            
