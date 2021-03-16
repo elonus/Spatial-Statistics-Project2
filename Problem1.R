@@ -64,8 +64,8 @@ for(i in 1:length(data)){
   
 sim.unif <- function() {
   n <- rpois(1, lambda = 100)
-  x <- runif(n, min = 0, max = 10)
-  y <- runif(n, min = 0, max = 10)
+  x <- runif(n, min = 0, max = 1)
+  y <- runif(n, min = 0, max = 1)
   
   return(cbind(x, y))
 }
@@ -80,15 +80,20 @@ tmp <- as.data.frame(tmp)
 names(tmp) = c("x", "y")
 
 plot(Kfn(tmp, fs = 1.4, k = 100))
+plot(Kfn(tmp, 1))
+abline(a = 0, b = 1)
+abline(a = 0, b = 10)
 
 tmp2 <- as.ppp(tmp, c(0, 10, 0, 10))
 
 jest <- Jest(tmp2, r = seq(from = 0, to = 1.14, by = 0.001))
 
 plot(Jest(tmp2, r = seq(from = 0, to = 1.14, by = 0.001)))
+plot(Jest(tmp2))
 
-plot(Jest(as.ppp(pines, c(0, 1, 0, 1))))
+plot(Jest(as.ppp(tmp2, c(0, 1, 0, 1))))
 jest <- Jest(as.ppp(pines, c(0, 1, 0, 1)))
+plot(jest)
 
 #for(i in 1:length(data)) {
 #  plot(Kfn(data[[i]], fs = maxdist, k = num.points), type = "l", xlab = "t", ylab = expression(L[2](t)), 
