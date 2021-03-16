@@ -19,7 +19,12 @@ names <- c("Cells", "Pines", "Redwood")
 
 # Problem 1a
 for(i in 1:length(data)) {
-  plot(x = data[[i]]$x, y = data[[i]]$y, xlim = c(0, 1), ylim = c(0, 1), xlab = "x", ylab = "y", main = names[i])
+  pdf(paste0("images/", names[i], "_points.pdf"))
+  op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 3.1, 3.1, 1.1))
+  #op <- par(cex.lab = 2, cex.main = 2, mgp = c(2, 1, 0))
+  plot(x = data[[i]]$x, y = data[[i]]$y, xlim = c(0, 1), ylim = c(0, 1), xlab = "x", ylab = "y", main = names[i], pch = 16)
+  par(op)
+  dev.off()
 }
 
 
@@ -39,21 +44,24 @@ sim.unif <- function(n) {
   return(cbind(x, y))
 }
 
-sim = as.ppp(sim.unif(), window)
-plot(Kfn(sim, fs = 1.4, k = 100))
+data <- list(cells, pines, redwood)
 
+for(i in 1:length(data)) {
+  pdf(paste0("images/", names[i], "_Jhat.pdf"))
+  op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
+  plot(Kfn(data[[i]], fs = 1.4, k = 100), type = "p", main = names[i], xlab = "t", ylab = expression(hat(J)(t)))
+  par(op)
+  dev.off()
+}
 
-plot(Kfn(cells, fs = 1.4, k = 100), type = "l")
-plot(Kfn(pines, fs = 1.4, k = 100), type = "l")
-plot(Kfn(redwood, fs = 1.4, k = 100), type = "l")
-
-
-plot(Kfn(cells, fs = 1.4, k = 1000), type = "l")
-abline(a = 0, b = 1, col = "red")
-plot(Kfn(pines, fs = 1.4, k = 1000), type = "l")
-abline(a = 0, b = 1, col = "red")
-plot(Kfn(redwood, fs = 1.4, k = 1000), type = "l")
-abline(a = 0, b = 1, col = "red")
+for(i in 1:length(data)) {
+  pdf(paste0("images/", names[i], "_Jhat_with_line.pdf"))
+  op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
+  plot(Kfn(data[[i]], fs = 1.4, k = 100), type = "p", main = names[i], xlab = "t", ylab = expression(hat(J)(t)))
+  abline(a = 0, b = 1, col = "red", lwd = 6)
+  par(op)
+  dev.off()
+}
 
 # c)
 
@@ -77,12 +85,22 @@ compute_quantiles = function(s, n){
   Q_mat
 }
 
-MC_test = function(s, dataset){  # input dataset as ppp
+MC_test = function(s, dataset, ...){  # input dataset as ppp
   quantiles = compute_quantiles(s, length(dataset$x))
-  plot(Kfn(dataset, fs = 1.4, k = 100), type = "l")
-  lines(x = quantiles$x, y = quantiles$upper, col = "red")
-  lines(x = quantiles$x, y = quantiles$lower, col = "red")
+  plot(Kfn(dataset, fs = 1.4, k = 100), type = "l", ...)
+  lines(x = quantiles$x, y = quantiles$upper, col = "red", lty = 2, ...)
+  lines(x = quantiles$x, y = quantiles$lower, col = "red", lty = 2, ...)
+  par(op)
 }
+
 MC_test(100, cells)
 MC_test(100, pines)
 MC_test(100, redwood)
+
+for(i in 1:length(data)) {
+  pdf(paste0("images/", names[i], "_Jhat_with_quantiles.pdf"))
+  op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
+  MC_test(100, data[[i]], main = names[i], xlab = "t", ylab = expression(hat(J)(t)), lwd = 6)
+  par(op)
+  dev.off()
+}
