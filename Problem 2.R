@@ -9,15 +9,23 @@ prob = read.table("obsprob.txt", header = TRUE)
 
 obs.matrix = matrix(obs$N_obs, byrow = FALSE, nrow = sqrt(nrow(obs)))
 
+pdf("images/Pines_grid.pdf")
+op <- par(cex = 2, mar = c(5.1, 4.1, 4.1, 4.4), mgp = c(2, 1, 0))
 image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10), z = obs.matrix, 
-           main = "The number of pine trees observed in each grid unit",
+           main = "Number of pine trees observed",
            xlab = "X", ylab = "Y")
+par(op)
+dev.off()
 
 prob.matrix = matrix(prob$alpha, byrow = FALSE, nrow = sqrt(nrow(prob)))
 
+pdf("images/Pines_alphas_grid.pdf")
+op <- par(cex = 2, mar = c(5.1, 4.1, 4.1, 4.4), mgp = c(2, 1, 0))
 image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10), z = prob.matrix,
-           main = "Probability of observing a pine tree occuring in the grid",
+           main = "Probability of observing pine tree",
            xlab = "X", ylab = "Y")
+par(op)
+dev.off()
 
 
 # kommenter: sammenheng mellom plots
@@ -49,6 +57,7 @@ for (j in 1:6){
   event.locs[[j]] = event.loc
 }
   
+pdf("images/2c.pdf")
 op = par(mfrow = c(2, 3), oma = c(1, 0, 2, 0))
 
 plot(x = event.locs[[1]][, 1], y = event.locs[[1]][, 2], type = "p", 
@@ -76,6 +85,7 @@ plot(x = event.locs[[6]][, 1], y = event.locs[[6]][, 2], type = "p",
      main = "Realization 6", xlim = c(0,300), ylim = c(0,300))  
 mtext("Prior Poisson eventlocation realizations", outer = TRUE, cex = 2)
 par(op)
+dev.off()
 
 #d)
 prob$alpha
@@ -99,7 +109,9 @@ for (j in (1:6)){
   post.event.locs[[j]] = event.loc
 }
 
-par(mfrow = c(2,3), oma = c(1, 0, 2, 0))
+
+pdf("images/2d.pdf")
+op <- par(mfrow = c(2,3), oma = c(1, 0, 2, 0))
 
 plot(x = post.event.locs[[1]][, 1], y = post.event.locs[[1]][, 2], type = "p", 
      pch = 19, cex = 0.7, col = "darkorchid2", xlab = "X", ylab = "Y", 
@@ -126,6 +138,7 @@ plot(x = post.event.locs[[6]][, 1], y = post.event.locs[[6]][, 2], type = "p",
      main = "Realization 6", xlim = c(0,300), ylim = c(0,300)) 
 mtext("Posterior Poisson eventlocation realizations", outer = TRUE, cex = 2)
 par(op)
+dev.off()
 
 #e)
 
@@ -142,17 +155,22 @@ for (i in 1:900){
 prior.matrix = matrix(prior, byrow = FALSE, nrow = sqrt(length(prior)))
 post.matrix = matrix(posterior, byrow = FALSE, nrow = sqrt(length(posterior)))
 
-
-
+pdf("images/2e_prior.pdf")
+op <- par(cex = 2, mar = c(5.1, 4.1, 4.1, 4.4), mgp = c(2, 1, 0))
 image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10),
            z = prior.matrix, xlab = "X", ylab = "Y",
            main = "Prior", xlim = c(0,300),
            ylim = c(0,300))
+par(op)
+dev.off()
+
+pdf("images/2e_posterior.pdf")
+op <- par(cex = 2, mar = c(5.1, 4.1, 4.1, 4.4), mgp = c(2, 1, 0))
 image.plot(x = seq(5, 295, by = 10), y = seq(5, 295, by = 10),
            z = post.matrix, xlab = "X", ylab = "Y",
            main = "Posterior", xlim = c(0,300),
            ylim = c(0,300))
-#mtext("Average of 100 realizations of thediscretized event-count model",
-     # outer = TRUE, cex = 2)
-
+mtext("Average of 100 realizations", outer = TRUE, cex = 2)
+par(op)
+dev.off()
            
