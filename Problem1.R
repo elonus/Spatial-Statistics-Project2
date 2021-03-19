@@ -4,11 +4,10 @@ library(spatstat)
 
 set.seed(123)
 
+# Load data
 cells <- read.table("cells.dat")
 pines <- read.table("pines.dat")
 redwood <- read.table("redwood.dat")
-
-#pines <- ppinit("pines.dat")
 
 names(cells) <- c("x", "y")
 names(pines) <- c("x", "y")
@@ -100,7 +99,7 @@ MC_test(100, redwood)
 for(i in 1:length(data)) {
   pdf(paste0("images/", names[i], "_Jhat_with_quantiles.pdf"))
   op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
-  MC_test(100, data[[i]], main = names[i], xlab = "t", ylab = expression(hat(J)(t)), lwd = 6)
+  MC_test(1000, data[[i]], main = names[i], xlab = "t", ylab = expression(hat(J)(t)), lwd = 6)
   par(op)
   dev.off()
 }
