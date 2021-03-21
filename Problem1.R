@@ -46,17 +46,17 @@ sim.unif <- function(n) {
 data <- list(cells, pines, redwood)
 
 for(i in 1:length(data)) {
-  pdf(paste0("images/", names[i], "_Jhat.pdf"))
+  pdf(paste0("images/", names[i], "_L2hat.pdf"))
   op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
-  plot(Kfn(data[[i]], fs = 1.4, k = 100), type = "p", main = names[i], xlab = "t", ylab = expression(hat(J)(t)))
+  plot(Kfn(data[[i]], fs = 1.4, k = 100), type = "p", main = names[i], xlab = "t", ylab = expression(hat(L[2])(t)))
   par(op)
   dev.off()
 }
 
 for(i in 1:length(data)) {
-  pdf(paste0("images/", names[i], "_Jhat_with_line.pdf"))
+  pdf(paste0("images/", names[i], "_L2hat_with_line.pdf"))
   op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
-  plot(Kfn(data[[i]], fs = 1.4, k = 100), type = "p", main = names[i], xlab = "t", ylab = expression(hat(J)(t)))
+  plot(Kfn(data[[i]], fs = 1.4, k = 100), type = "p", main = names[i], xlab = "t", ylab = expression(hat(L[2])(t)))
   abline(a = 0, b = 1, col = "red", lwd = 6)
   par(op)
   dev.off()
@@ -97,9 +97,9 @@ MC_test(100, pines)
 MC_test(100, redwood)
 
 for(i in 1:length(data)) {
-  pdf(paste0("images/", names[i], "_Jhat_with_quantiles.pdf"))
+  pdf(paste0("images/", names[i], "_L2hat_with_quantiles.pdf"))
   op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 4.6, 3.1, 1.1))
-  MC_test(1000, data[[i]], main = names[i], xlab = "t", ylab = expression(hat(J)(t)), lwd = 6)
+  MC_test(1000, data[[i]], main = names[i], xlab = "t", ylab = expression(hat(L[2])(t)), lwd = 6)
   par(op)
   dev.off()
 }
