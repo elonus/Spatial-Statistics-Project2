@@ -29,6 +29,7 @@ phi <- function(tau, tau.0, phi.0, phi.1) {
 }
 
 pdf <- function(x, y, tau.0, phi.0, phi.1) {
+  # Does not calculate the actual pdf, just a value proportional to it. We are only interested in if it is zero or not, so this does not matter.
   res <- 1
   k <- length(x)
   for (i in 1:k) {
@@ -43,9 +44,10 @@ pdf <- function(x, y, tau.0, phi.0, phi.1) {
 Strauss_sim = function(k, tau.0, phi.0, phi.1, n.iter = 1000){
   num_accept = 0
   x_vec = list(x = runif(k), y = runif(k))
-  while (pdf(x_vec$x, x_vec$y, tau.0, phi.0, phi.1) == 0) {
-    x_vec <- list(x = runif(k), y = runif(k))
-  }
+  # Prøver å fjerne denne sjekken. Matematisk vil pdf'en alltid være større enn 0 så lenge alle observasjonene er innenfor kvadratet, noe de alltid vil være ettersom vi simulerer innen kvadratet.
+  #while (pdf(x_vec$x, x_vec$y, tau.0, phi.0, phi.1) == 0) {
+  #  x_vec <- list(x = runif(k), y = runif(k))
+  #}
   
   for (i in 1:n.iter) {
     #if(i %% 100 == 0) print(i)
@@ -56,7 +58,7 @@ Strauss_sim = function(k, tau.0, phi.0, phi.1, n.iter = 1000){
       sapply(1:k, function(j) {
         x1 <- x.prop - c(x_vec$x[j], x_vec$y[j])
         x2 <- c(x_vec$x[u], x_vec$y[u]) - c(x_vec$x[j], x_vec$y[j])
-        return(phi(norm(x1, type = "2"), tau.0, phi.0, phi.1) - phi(norm(x2, type = "2"), tau.0, phi.0, phi.1))
+        return(phi(norm(x1, type = "2"), tau.0 = tau.0, phi.0 = phi.0, phi.1 = phi.1) - phi(norm(x2, type = "2"), tau.0 = tau.0, phi.0 = phi.0, phi.1 = phi.1))
         })
       )
     
@@ -148,3 +150,17 @@ plot(res$x, res$y, type = "p")
 MC_test(100, cells, k, tau.0 = 0.05, phi.0 = 5, phi.1 = 20)
 
 MC_test(100, cells, k, tau.0 = 0.05, phi.0 = 9, phi.1 = 20)
+
+res <- Strauss_sim(k, tau.0 = 0.08, phi.0 = 50, phi.1 = 20, n.iter = 1000)
+plot(res$x, res$y, type = "p")
+MC_test(100, cells, k, tau.0 = 0.08, phi.0 = 50, phi.1 = 20)
+abline(0, 1)
+
+res <- Strauss_sim(k, tau.0 = 0.02, phi.0 = 1, phi.1 = 5, n.iter = 1000)
+plot(res$x, res$y, type = "p")
+window = owin(xrange = c(0, 1), yrange = c(0, 1))
+sim <- as.ppp(res, window)
+plot(Kfn(sim, fs = 1.4, k = 100), type = "l")
+abline(0, 1)
+MC_test(100, cells, k, tau.0 = 0.02, phi.0 = 100, phi.1 = 2)
+abline(0, 1)
