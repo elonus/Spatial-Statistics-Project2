@@ -104,19 +104,22 @@ plot(Neuman_sim(lambda_M = 10, sigma = 0.07, lambda_k = 6))
 
 
 pdf("images/3realization1.pdf")
-op <- par(mgp = c(2, 1, 0))
-plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6), xlab = "x", ylab = "y", main = "Realization 1")
+op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 3.1, 3.1, 1.1))
+plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6), xlab = "x",
+     ylab = "y", main = "Realization 1", pch = 19)
 par(op)
 dev.off()
 
 pdf("images/3realization2.pdf")
-op <- par(mgp = c(2, 1, 0))
-plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6), xlab = "x", ylab = "y", main = "Realization 2")
+op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 3.1, 3.1, 1.1))
+plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6), xlab = "x",
+     ylab = "y", main = "Realization 2", pch = 19)
 par(op)
 dev.off()
 
 pdf("images/3realization3.pdf")
-op <- par(mgp = c(2, 1, 0))
-plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6), xlab = "x", ylab = "y", main = "Realization 3")
+op <- par(cex = 2, cex.lab = 2, cex.main = 2.3, mgp = c(2, 1, 0), mar = c(4.1, 3.1, 3.1, 1.1))
+plot(Neuman_sim(lambda_M = 10, sigma = 0.1, lambda_k = 6), xlab = "x",
+     ylab = "y", main = "Realization 3", pch = 19)
 par(op)
 dev.off()
