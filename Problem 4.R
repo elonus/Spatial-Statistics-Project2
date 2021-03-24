@@ -41,7 +41,7 @@ pdf <- function(x, y, tau.0, phi.0, phi.1) {
   return(res)
 }
   
-Strauss_sim = function(k, tau.0, phi.0, phi.1, n.iter = 1000){
+Strauss_sim = function(k, tau.0, phi.0, phi.1, n.iter = 5000){
   num_accept = 0
   x_vec = list(x = runif(k), y = runif(k))
   # Prøver å fjerne denne sjekken. Matematisk vil pdf'en alltid være større enn 0 så lenge alle observasjonene er innenfor kvadratet, noe de alltid vil være ettersom vi simulerer innen kvadratet.
@@ -171,10 +171,40 @@ plot(res$x, res$y, type = "p")
 MC_test(100, cells, k, tau.0 = 0.08, phi.0 = 50, phi.1 = 20)
 abline(0, 1)
 
-res <- Strauss_sim(k, tau.0 = 0.10, phi.0 = 1, phi.1 = 5, n.iter = 1000)
+res <- Strauss_sim(k, tau.0 = 0.10, phi.0 = 100, phi.1 = 1, n.iter = 5000)
 plot(res$x, res$y, type = "p")
 sim <- as.ppp(res, window)
 plot(Kfn(sim, fs = 1.4, k = 100), type = "l")
 abline(0, 1)
 MC_test(100, cells, k, tau.0 = 0.02, phi.0 = 100, phi.1 = 2)
 abline(0, 1)
+
+
+
+pdf("images/4guesstimate1.pdf")
+op <- par(mgp = c(2, 1, 0), cex = 2)
+MC_test(100, cells, k, tau.0 = 0.1, phi.0 = 100, phi.1 = 1, xlab = "t", 
+        ylab = expression(hat(L)[2](t)), main = "Guestimate 1",  lwd = 4)
+par(op)
+dev.off()
+
+pdf("images/4guesstimate2.pdf")
+op <- par(mgp = c(2, 1, 0), cex = 2)
+MC_test(100, cells, k, tau.0 = 0.1, phi.0 = 1, phi.1 = 100, xlab = "t", 
+        ylab = expression(hat(L)[2](t)), main = "Guestimate 2",  lwd = 4)
+par(op)
+dev.off()
+
+pdf("images/4guesstimate3.pdf")
+op <- par(mgp = c(2, 1, 0), cex = 2)
+MC_test(100, cells, k, tau.0 = 0.1, phi.0 = 1, phi.1 = 1, xlab = "t", 
+        ylab = expression(hat(L)[2](t)), main = "Guestimate 3",  lwd = 4)
+par(op)
+dev.off()
+
+pdf("images/4guesstimate4.pdf")
+op <- par(mgp = c(2, 1, 0), cex = 2)
+MC_test(100, cells, k, tau.0 = 0.1, phi.0 = 100, phi.1 = 100, xlab = "t", 
+        ylab = expression(hat(L)[2](t)), main = "Guestimate 4",  lwd = 4)
+par(op)
+dev.off()
